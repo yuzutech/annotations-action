@@ -33,7 +33,7 @@ async function run() {
         path: r.file, 
         start_line: r.line, 
         end_line: r.line, 
-        annotation_level: "error", 
+        annotation_level: "failure", 
         message: r.message,
         title: r.title
       }));
