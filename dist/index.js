@@ -532,14 +532,14 @@ async function run() {
     const reportContent = await fs.readFile(reportPath, 'utf8');
     const reports = JSON.parse(reportContent);
 
-    const checks = await octokit.checks.listForRef({
+    const { data: { check_runs } } = await octokit.checks.listForRef({
         owner,
         repo,
         ref,
         status: "in_progress"
     });
 
-    console.log("CHECKS", checks);
+    console.log("CHECKS", check_runs);
 
     //reports.forEach(async (report) => {
     //  console.log(report);
