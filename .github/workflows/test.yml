@@ -15,4 +15,5 @@ jobs:
       #- run: npm test
     - uses: ./
       with:
+        githubToken: ${{ secrets.GITHUB_TOKEN }}
         reportPath: ./test/json-report.json
