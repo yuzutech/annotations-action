@@ -22,7 +22,6 @@ async function run() {
         ref,
         status: "in_progress"
     });
-    console.log(check_run);
     const check_run_id = check_run.id;
 
     //The Github Checks API requires that Annotations are not submitted in batches of more than 50
@@ -44,7 +43,7 @@ async function run() {
         owner,
         repo,
         check_run_id,
-        output: { ...check_run.output, annotations }
+        output: { title: "My Check Run", summary: "My check run summary", annotations }
       });
 
       console.log("response", res);
