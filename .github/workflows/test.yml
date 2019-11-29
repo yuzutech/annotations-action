@@ -1,4 +1,5 @@
 name: "test-local"
+on: push
 jobs:
   test:
     runs-on: ubuntu-latest
