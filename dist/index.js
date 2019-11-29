@@ -524,9 +524,9 @@ async function run() {
   try { 
     const reportPath = core.getInput('reportPath');
 
-    const dir = fs.readdir('./');
+    const dir = await fs.readdir('./');
     console.log(dir);
-    const reportContent = fs.readFile(reportPath, 'utf8');
+    const reportContent = await fs.readFile(reportPath, 'utf8');
     console.log(reportContent);
 
     const report = JSON.parse(reportContent);
