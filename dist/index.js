@@ -526,22 +526,24 @@ async function run() {
 
     const reportPath = core.getInput('reportPath');
     const ref = github.context.sha;
-    const owner = github.context.payload.repository.owner;
-    console.log("REPO", github.context.payload.repository);
+    const owner = github.context.payload.repository.owner.name;
+    const repo = github.context.payload.repository.name;
 
     const reportContent = await fs.readFile(reportPath, 'utf8');
     const reports = JSON.parse(reportContent);
 
-    //    const checks = await octokit.checks.listForRef({
-    //        owner,
-    //        repo,
-    //        ref,
-    //        status: "in_progress"
-    //    });
-
-    reports.forEach(async (report) => {
-      console.log(report);
+    const checks = await octokit.checks.listForRef({
+        owner,
+        repo,
+        ref,
+        status: "in_progress"
     });
+
+    console.log("CHECKS", checks);
+
+    //reports.forEach(async (report) => {
+    //  console.log(report);
+    //});
 
   } 
   catch (error) {
