@@ -30,7 +30,7 @@ async function run() {
     const batchedReports = batchIt(50, reports);
 
     batchedReports.forEach(async (reports) => {
-      reports.forEach(r => { r.file = "index.js"; r.line = 5; });
+      reports.forEach(r => { r.file = "index.js"; r.line = 33; });
 
       const annotations = reports.map(r => ({ 
         path: r.file, 
