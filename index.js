@@ -16,19 +16,38 @@ async function run() {
     const reportContent = await fs.readFile(reportPath, 'utf8');
     const reports = JSON.parse(reportContent);
 
-    const { data: { check_runs } } = await octokit.checks.listForRef({
+    const { data: { check_runs: [{ id: check_run_id }] } } = await octokit.checks.listForRef({
         owner,
         repo,
         ref,
         status: "in_progress"
     });
 
-    console.log("CHECKS", check_runs);
+    //The Github Checks API requires that Annotations are not submitted in batches of more than 50
+    const batchedReports = batchIt(50, reports);
 
-    //reports.forEach(async (report) => {
-    //  console.log(report);
-    //});
+    batchedReports.forEach(async (reports) => {
+      reports.forEach(r => r.file = "index.js");
 
+      const annotations = reports.map(r => ({ 
+        path: r.file, 
+        start_line: r.line, 
+        end_line: r.line, 
+        annotation_level: "error", 
+        message: r.message,
+        title: r.title
+      }));
+
+      const res = await octokit.checks.update({
+        owner,
+        repo,
+        check_run_id,
+        output: { annotations }
+      });
+
+      console.log("response", res);
+
+    });
   } 
   catch (error) {
     core.setFailed(error.message);
@@ -36,3 +55,16 @@ async function run() {
 }
 
 run()
+
+
+const batchIt = (size, inputs) => inputs.reduce((batches, input) => {
+  const current = batches[batches.length - 1];
+
+  current.push(input);
+
+  if (current.length == size) {
+    batches.push([]);
+  }
+
+  return batches;
+}, [[]]);
