@@ -8,11 +8,7 @@ async function run() {
   try { 
     const reportPath = core.getInput('reportPath');
 
-    const dir = await fs.readdir('./');
-    console.log(dir);
     const reportContent = await fs.readFile(reportPath, 'utf8');
-    console.log(reportContent);
-
     const report = JSON.parse(reportContent);
 
     console.log(report);
