@@ -9,6 +9,7 @@ async function run() {
     const reportPath = core.getInput('reportPath');
 
     const reportContent = fs.readFile(reportPath, 'utf8');
+    console.log(reportContent);
 
     const report = JSON.parse(reportContent);
 
