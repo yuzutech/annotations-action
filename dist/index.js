@@ -528,23 +528,25 @@ async function run() {
     const ref = github.context.sha;
     const owner = github.context.payload.repository.owner.name;
     const repo = github.context.payload.repository.name;
+    const workflow = github.context.workflow;
+    const check_run = process.env.GITHUB_WORKFLOW;
 
     const reportContent = await fs.readFile(reportPath, 'utf8');
     const reports = JSON.parse(reportContent);
 
-    const { data: { check_runs: [check_run] } } = await octokit.checks.listForRef({
+    const { data: { check_runs: [{ id: check_run_id }] } } = await octokit.checks.listForRef({
         owner,
         repo,
         ref,
+        check_run,
         status: "in_progress"
     });
-    const check_run_id = check_run.id;
 
     //The Github Checks API requires that Annotations are not submitted in batches of more than 50
     const batchedReports = batchIt(50, reports);
 
     batchedReports.forEach(async (reports) => {
-      reports.forEach(r => r.file = "index.js");
+      reports.forEach(r => { r.file = "index.js"; r.line = 5; });
 
       const annotations = reports.map(r => ({ 
         path: r.file, 
@@ -555,15 +557,12 @@ async function run() {
         title: r.title
       }));
 
-      const res = await octokit.checks.update({
+      await octokit.checks.update({
         owner,
         repo,
         check_run_id,
-        output: { title: "My Check Run", summary: "My check run summary", annotations }
+        output: { title: `${workFlow} Check Run`, summary: `${annotations.length} errors(s) found`, annotations }
       });
-
-      console.log("response", res);
-
     });
   } 
   catch (error) {
