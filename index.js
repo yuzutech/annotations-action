@@ -45,7 +45,7 @@ async function run() {
         owner,
         repo,
         check_run_id,
-        output: { title: `${workFlow} Check Run`, summary: `${annotations.length} errors(s) found`, annotations }
+        output: { title: `${workflow} Check Run`, summary: `${annotations.length} errors(s) found`, annotations }
       });
     });
   } 
