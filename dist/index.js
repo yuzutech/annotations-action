@@ -519,19 +519,19 @@ const github = __webpack_require__(469);
 const fs = __webpack_require__(747).promises;
 
 
-// most @actions toolkit packages have async methods
 async function run() {
   try { 
+    const ghToken = core.getInput("githubToken");
+    console.log(github.context);
+    const octokit = github.GitHub(ghToken);
     const reportPath = core.getInput('reportPath');
 
-    const dir = await fs.readdir('./');
-    console.log(dir);
     const reportContent = await fs.readFile(reportPath, 'utf8');
-    console.log(reportContent);
+    const reports = JSON.parse(reportContent);
 
-    const report = JSON.parse(reportContent);
-
-    console.log(report);
+    reports.forEach(async (report) => {
+      console.log(report);
+    });
 
   } 
   catch (error) {

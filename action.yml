@@ -1,7 +1,10 @@
 name: 'Create Annotations for Tests'
 description: 'Creates annotations for failing tests'
 inputs:
-  reportPath:  # id of input
+  githubToken:
+    description: "GitHub token for use when authenticating with API"
+    required: true
+  reportPath:
     description: 'Path to json file containing test errors to create annotations for'
     required: true
 runs:
