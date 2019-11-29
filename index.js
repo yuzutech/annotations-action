@@ -1,18 +1,19 @@
 const core = require('@actions/core');
-const wait = require('./wait');
+const github = require('@actions/github');
+const fs = require('fs').promises;
 
 
 // most @actions toolkit packages have async methods
 async function run() {
   try { 
-    const ms = core.getInput('milliseconds');
-    console.log(`Waiting ${ms} milliseconds ...`)
+    const reportPath = core.getInput('reportPath');
 
-    core.debug((new Date()).toTimeString())
-    wait(parseInt(ms));
-    core.debug((new Date()).toTimeString())
+    const reportContent = fs.readFile(reportPath, 'utf8');
 
-    core.setOutput('time', new Date().toTimeString());
+    const report = JSON.parse(reportContent);
+
+    console.log(report);
+
   } 
   catch (error) {
     core.setFailed(error.message);
