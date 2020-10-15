@@ -366,10 +366,10 @@ async function run () {
         owner,
         repo,
         check_run_id: checkRunId,
+        status: 'completed',
+        conclusion,
         output: {
           title,
-          status: 'completed',
-          conclusion,
           summary: messages.join('\n'),
           annotations
         }
