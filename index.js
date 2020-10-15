@@ -18,10 +18,10 @@ const ANNOTATION_LEVELS = ['notice', 'warning', 'failure']
 
 async function run () {
   try {
-    const repoToken = core.getInput('repo-token')
+    const repoToken = core.getInput('repo-token', { required: true })
     const octokit = new github.getOctokit(repoToken)
 
-    const inputPath = core.getInput('input')
+    const inputPath = core.getInput('input', { required: true })
     const ref = github.context.sha
     const owner = github.context.payload.repository.owner.name
     const repo = github.context.payload.repository.name
@@ -68,6 +68,7 @@ async function run () {
       })
     }
   } catch (error) {
+    core.error(error)
     core.setFailed(error.message)
   }
 }
