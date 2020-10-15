@@ -4,7 +4,7 @@
     "line": 33,
     "title": "Doing foo is not recommended, consider using bar",
     "annotation_level": "warning",
-    "message": "<code>foo</code> is deprecated since version 1.2.3, please use <code>bar</code>."
+    "message": "`foo` is deprecated since version 1.2.3, please use `bar`."
   },
   {
     "file": "index.js",
