@@ -298,8 +298,7 @@ async function run () {
     const ref = github.context.sha
     const owner = github.context.payload.repository.owner.name
     const repo = github.context.payload.repository.name
-    const workflow = github.context.workflow
-    const title = `${workflow} Check Run`
+    const title = 'annotations'
 
     const inputContent = await fs.readFile(inputPath, 'utf8')
     const annotations = JSON.parse(inputContent)
@@ -337,7 +336,7 @@ async function run () {
         owner,
         repo,
         check_run_id: checkRunId,
-        output: { summary: `${annotations.length} errors(s) found`, annotations }
+        output: { title, summary: `${annotations.length} errors(s) found`, annotations }
       })
     }
   } catch (error) {
