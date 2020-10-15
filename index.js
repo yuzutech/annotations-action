@@ -26,17 +26,17 @@ async function run () {
     const owner = github.context.payload.repository.owner.name
     const repo = github.context.payload.repository.name
     const workflow = github.context.workflow
-    const checkRun = process.env.GITHUB_WORKFLOW
+    const title = `${workflow} Check Run`
 
     const inputContent = await fs.readFile(inputPath, 'utf8')
     const annotations = JSON.parse(inputContent)
 
-    const { data: { check_runs: [{ id: checkRunId }] } } = await octokit.checks.listForRef({
+    const { data: { id: checkRunId } } = await octokit.checks.create({
       owner,
       repo,
-      ref,
-      check_run: checkRun,
-      status: 'in_progress'
+      name: title,
+      head_sha: ref,
+      status: 'in_progress',
     })
 
     // The GitHub API requires that annotations are submitted in batches of 50 elements maximum
@@ -64,7 +64,7 @@ async function run () {
         owner,
         repo,
         check_run_id: checkRunId,
-        output: { title: `${workflow} Check Run`, summary: `${annotations.length} errors(s) found`, annotations }
+        output: { summary: `${annotations.length} errors(s) found`, annotations }
       })
     }
   } catch (error) {
