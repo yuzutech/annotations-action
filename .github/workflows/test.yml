@@ -6,8 +6,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - run: npm ci
-      #- run: npm test
     - uses: ./
       with:
-        githubToken: ${{ secrets.GITHUB_TOKEN }}
-        reportPath: ./test/json-report.json
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        input: ./test/json-report.json
