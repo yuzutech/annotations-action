@@ -19,7 +19,7 @@ const ANNOTATION_LEVELS = ['notice', 'warning', 'failure']
 async function run () {
   try {
     const repoToken = core.getInput('repo-token')
-    const octokit = new github.GitHub(repoToken)
+    const octokit = new github.getOctokit(repoToken)
 
     const inputPath = core.getInput('input')
     const ref = github.context.sha
