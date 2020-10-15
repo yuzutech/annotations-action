@@ -1,1 +1,23 @@
-[{"file":"index.js","line":"33","title":"Test Failed: 'my failing test' in MyTestSuite","message":"Some(\"2\") did not equal Some(\"3\")\n\nStack trace:\n\torg.scalatest.exceptions.TestFailedException: Some(\"2\") did not equal Some(\"3\")\n\tat org.scalatest.Assertions.newAssertionFailedException(Assertions.scala:528)\n\tat org.scalatest.Assertions.newAssertionFailedException$(Assertions.scala:527)\n\tat org.scalatest.FunSuite.newAssertionFailedException(FunSuite.scala:1560)\n\tat org.scalatest.Assertions$AssertionsHelper.macroAssert(Assertions.scala:501)\n\tat com.humio.MyTestSuite.$anonfun$new$9(MyTestSuite.scala:108)\n\tat org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)\n\tat org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)\n\tat org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)\n\tat org.scalatest.Transformer.apply(Transformer.scala:22)\n\tat org.scalatest.Transformer.apply(Transformer.scala:20)\n\tat org.scalatest.FunSuiteLike$$anon$1.apply(FunSuiteLike.scala:186)\n\tat org.scalatest.TestSuite.withFixture(TestSuite.scala:196)\n\tat org.scalatest.TestSuite.withFixture$(TestSuite.scala:195)\n\tat org.scalatest.FunSuite.withFixture(FunSuite.scala:1560)\n\tat org.scalatest.FunSuiteLike.invokeWithFixture$1(FunSuiteLike.scala:184)\n\tat org.scalatest.FunSuiteLike.$anonfun$runTest$1(FunSuiteLike.scala:196)\n\tat org.scalatest.SuperEngine.runTestImpl(Engine.scala:289)\n\tat org.scalatest.FunSuiteLike.runTest(FunSuiteLike.scala:196)\n\tat org.scalatest.FunSuiteLike.runTest$(FunSuiteLike.scala:178)\n\tat com.humio.util.AbstractTest.org$scalatest$BeforeAndAfterEach$$super$runTest(AbstractTest.scala:26)\n\tat org.scalatest.BeforeAndAfterEach.runTest(BeforeAndAfterEach.scala:221)\n\tat org.scalatest.BeforeAndAfterEach.runTest$(BeforeAndAfterEach.scala:214)\n\tat com.humio.util.AbstractTest.runTest(AbstractTest.scala:128)\n\tat org.scalatest.FunSuiteLike.$anonfun$runTests$1(FunSuiteLike.scala:229)\n\tat org.scalatest.SuperEngine.$anonfun$runTestsInBranch$1(Engine.scala:396)\n\tat scala.collection.immutable.List.foreach(List.scala:392)\n\tat org.scalatest.SuperEngine.traverseSubNodes$1(Engine.scala:384)\n\tat org.scalatest.SuperEngine.runTestsInBranch(Engine.scala:379)\n\tat org.scalatest.SuperEngine.runTestsImpl(Engine.scala:461)\n\tat org.scalatest.FunSuiteLike.runTests(FunSuiteLike.scala:229)\n\tat org.scalatest.FunSuiteLike.runTests$(FunSuiteLike.scala:228)\n\tat org.scalatest.FunSuite.runTests(FunSuite.scala:1560)\n\tat org.scalatest.Suite.run(Suite.scala:1147)\n\tat org.scalatest.Suite.run$(Suite.scala:1129)\n\tat org.scalatest.FunSuite.org$scalatest$FunSuiteLike$$super$run(FunSuite.scala:1560)\n\tat org.scalatest.FunSuiteLike.$anonfun$run$1(FunSuiteLike.scala:233)\n\tat org.scalatest.SuperEngine.runImpl(Engine.scala:521)\n\tat org.scalatest.FunSuiteLike.run(FunSuiteLike.scala:233)\n\tat org.scalatest.FunSuiteLike.run$(FunSuiteLike.scala:232)\n\tat org.scalatest.FunSuite.run(FunSuite.scala:1560)\n\tat org.scalatest.tools.Framework.org$scalatest$tools$Framework$$runSuite(Framework.scala:314)\n\tat org.scalatest.tools.Framework$ScalaTestTask.execute(Framework.scala:507)\n\tat sbt.ForkMain$Run.lambda$runTest$1(ForkMain.java:304)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)\n\tat java.base/java.lang.Thread.run(Thread.java:834)\n\n"}]
+[
+  {
+    "file": "index.js",
+    "line": 33,
+    "title": "Doing foo is not recommended, consider using bar",
+    "annotation-level": "warning",
+    "message": "`foo` is deprecated since version 1.2.3, please use `bar`."
+  },
+  {
+    "file": "index.js",
+    "line": 11,
+    "title": "Quick tip, avoid drinking too much beer",
+    "annotation-level": "notice",
+    "message": "Beer is one of the oldest and most widely consumed alcoholic drinks in the world, but drink in moderation!"
+  },
+  {
+    "file": "index.js",
+    "line": 42,
+    "title": "ArithmeticException",
+    "annotation-level": "failure",
+    "message": "Exception in thread \"main\" java.lang.ArithmeticException: / by zero\n        at Test.bar(Test.java:9)\n        at Test.foo(Test.java:3)\n        at Main.main(Main.java:3)"
+  }
+]
