@@ -22,11 +22,15 @@ In order to use this action, you will need to generate a JSON file using the fol
 
 ### `repo-token`
 
-**Required** Path to a JSON file which contains a list of annotations
+**Required** Token used to interact with the GitHub API.
 
 ### `input`
 
-**Required** Path to a JSON file which contains a list of annotations
+**Required** Path to a JSON file which contains a list of annotations.
+
+### `title`
+
+**Optional** Title of the check. Default: "check".
 
 ## Example usage
 
@@ -35,6 +39,7 @@ In order to use this action, you will need to generate a JSON file using the fol
   uses: yuzutech/annotations-action@v0.1.0
   with:
     repo-token: "${{ secrets.GITHUB_TOKEN }}"
+    title: 'lint'
     input: './annotations.json'
 ```
 

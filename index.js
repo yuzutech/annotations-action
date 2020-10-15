@@ -19,13 +19,13 @@ const ANNOTATION_LEVELS = ['notice', 'warning', 'failure']
 async function run () {
   try {
     const repoToken = core.getInput('repo-token', { required: true })
-    const octokit = new github.getOctokit(repoToken)
-
     const inputPath = core.getInput('input', { required: true })
+    const title = core.getInput('title', { required: false })
+
+    const octokit = new github.getOctokit(repoToken)
     const ref = github.context.sha
     const owner = github.context.payload.repository.owner.name
     const repo = github.context.payload.repository.name
-    const title = 'annotations'
 
     const inputContent = await fs.readFile(inputPath, 'utf8')
     const annotations = JSON.parse(inputContent)

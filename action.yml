@@ -11,6 +11,10 @@ inputs:
   input:
     description: 'Path to a JSON file which contains a list of annotations.'
     required: true
+  title:
+    description: 'Title of the check'
+    required: false
+    default: 'check'
 runs:
   using: 'node12'
   main: 'dist/index.js'
