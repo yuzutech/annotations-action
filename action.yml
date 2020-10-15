@@ -1,4 +1,8 @@
-name: 'Annotations Action'
+name: 'Annotate Action'
+branding:
+  icon: 'edit-3'
+  color: 'yellow'
+author: 'Guillaume Grossetie'
 description: 'Creates annotations from a JSON file'
 inputs:
   repo-token:
