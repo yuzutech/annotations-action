@@ -23,12 +23,11 @@ In order to use this action, you will need to generate a JSON file using the fol
 ### `repo-token`
 
 **Required** Path to a JSON file which contains a list of annotations
-  
-  
+
 ### `input`
 
 **Required** Path to a JSON file which contains a list of annotations
-  
+
 ## Example usage
 
 ```yml
