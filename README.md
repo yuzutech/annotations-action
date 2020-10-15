@@ -11,8 +11,8 @@ In order to use this action, you will need to generate a JSON file using the fol
   {
     file: "path/to/file.js",
     line: 5,
-    message: "my message",
     title: "title for my annotation",
+    message: "my message",
     annotation_level: "failure"
   }
 ]
@@ -33,9 +33,9 @@ In order to use this action, you will need to generate a JSON file using the fol
 
 ```yml
 - name: Annotate
-uses: yuzutech/annotations-action@v0.1.0
-with:
-  repo-token: "${{ secrets.GITHUB_TOKEN }}"
-  input: './annotations.json'
+  uses: yuzutech/annotations-action@v0.1.0
+  with:
+    repo-token: "${{ secrets.GITHUB_TOKEN }}"
+    input: './annotations.json'
 ```
 

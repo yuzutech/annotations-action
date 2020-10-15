@@ -3,21 +3,21 @@
     "file": "index.js",
     "line": 33,
     "title": "Doing foo is not recommended, consider using bar",
-    "annotation-level": "warning",
-    "message": "`foo` is deprecated since version 1.2.3, please use `bar`."
+    "annotation_level": "warning",
+    "message": "<code>foo</code> is deprecated since version 1.2.3, please use <code>bar</code>."
   },
   {
     "file": "index.js",
     "line": 11,
     "title": "Quick tip, avoid drinking too much beer",
-    "annotation-level": "notice",
+    "annotation_level": "notice",
     "message": "Beer is one of the oldest and most widely consumed alcoholic drinks in the world, but drink in moderation!"
   },
   {
     "file": "index.js",
     "line": 42,
     "title": "ArithmeticException",
-    "annotation-level": "failure",
+    "annotation_level": "failure",
     "message": "Exception in thread \"main\" java.lang.ArithmeticException: / by zero\n        at Test.bar(Test.java:9)\n        at Test.foo(Test.java:3)\n        at Main.main(Main.java:3)"
   }
 ]

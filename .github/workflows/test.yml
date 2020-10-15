@@ -6,7 +6,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - run: npm ci
-    - uses: ./
+    - name: Annotate
+      uses: ./
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         input: ./test/json-report.json
