@@ -1,11 +1,11 @@
-name: 'Create Annotations for Tests'
-description: 'Creates annotations for failing tests'
+name: 'Annotations Action'
+description: 'Creates annotations from a JSON file'
 inputs:
-  githubToken:
-    description: "GitHub token for use when authenticating with API"
+  repo-token:
+    description: 'Token used to interact with the GitHub API.'
     required: true
-  reportPath:
-    description: 'Path to json file containing test errors to create annotations for'
+  input:
+    description: 'Path to a JSON file which contains a list of annotations.'
     required: true
 runs:
   using: 'node12'
