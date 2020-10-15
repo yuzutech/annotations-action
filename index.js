@@ -38,9 +38,40 @@ async function run () {
       status: 'in_progress',
     })
 
+    const annotationsPerLevel = annotations.reduce((acc, annotation) => {
+      const level = annotation.annotation_level
+      let annotations
+      if (level in acc) {
+        annotations = acc[level]
+      } else {
+        annotations = []
+        acc[level] = annotations
+      }
+      annotations.push(annotation)
+      return acc
+    }, {})
+    const failureCount = (annotationsPerLevel['failure'] || []).length || 0
+    const warningCount = (annotationsPerLevel['warning'] || []).length || 0
+    const noticeCount = (annotationsPerLevel['notice'] || []).length || 0
+    const messages = []
+    if (failureCount > 0) {
+      messages.push(`${failureCount} failure(s) found`)
+    }
+    if (warningCount > 0) {
+      messages.push(`${warningCount} warning(s) found`)
+    }
+    if (noticeCount > 0) {
+      messages.push(`${noticeCount} notice(s) found`)
+    }
+    let conclusion = 'success'
+    if (failureCount > 0) {
+      conclusion = 'failure'
+    } else if (warningCount > 0 || noticeCount > 0) {
+      conclusion = 'neutral'
+    }
+
     // The GitHub API requires that annotations are submitted in batches of 50 elements maximum
     const batchedAnnotations = batchIt(50, annotations)
-
     for (const batch of batchedAnnotations) {
       const annotations = batch.map(annotation => {
         let annotationLevel
@@ -58,12 +89,17 @@ async function run () {
           title: annotation.title
         }
       })
-
       await octokit.checks.update({
         owner,
         repo,
         check_run_id: checkRunId,
-        output: { title, summary: `${annotations.length} errors(s) found`, annotations }
+        output: {
+          title,
+          status: 'completed',
+          conclusion,
+          summary: messages.join('\n'),
+          annotations
+        }
       })
     }
   } catch (error) {
