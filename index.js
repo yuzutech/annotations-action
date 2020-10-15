@@ -64,7 +64,7 @@ async function run () {
         owner,
         repo,
         check_run_id: checkRunId,
-        output: { summary: `${annotations.length} errors(s) found`, annotations }
+        output: { title, summary: `${annotations.length} errors(s) found`, annotations }
       })
     }
   } catch (error) {
