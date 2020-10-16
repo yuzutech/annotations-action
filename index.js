@@ -4,6 +4,13 @@ const fs = require('fs').promises
 
 const ANNOTATION_LEVELS = ['notice', 'warning', 'failure']
 
+class GitHubApiError extends Error {
+  constructor (message) {
+    super(message)
+    this.name = "GitHubApiError"
+  }
+}
+
 const batch = (size, inputs) => inputs.reduce((batches, input) => {
   const current = batches[batches.length - 1]
 
@@ -27,8 +34,7 @@ const createCheck = async function (octokit, owner, repo, title, ref) {
     })
     return checkRunId
   } catch (err) {
-    core.error(`Unable to create a check: ${err}`)
-    throw err
+    throw new GitHubApiError(`Unable to create a check, please make sure that the provided 'repo-token' has write permissions to ${owner}/${repo} - cause: ${err}`)
   }
 }
 
@@ -47,8 +53,7 @@ const updateCheck = async function (octokit, owner, repo, checkRunId, conclusion
       }
     })
   } catch (err) {
-    core.error(`Unable to update check {owner: "${owner}", repo: "${repo}", check_run_id: ${checkRunId}}: ${err}`)
-    throw err
+    throw new GitHubApiError(`Unable to update check {owner: "${owner}", repo: "${repo}", check_run_id: ${checkRunId}} - cause: ${err}`)
   }
 }
 
