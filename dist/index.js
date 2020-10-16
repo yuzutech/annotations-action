@@ -275,7 +275,9 @@ const core = __webpack_require__(470)
 const github = __webpack_require__(469)
 const fs = __webpack_require__(747).promises
 
-const batchIt = (size, inputs) => inputs.reduce((batches, input) => {
+const ANNOTATION_LEVELS = ['notice', 'warning', 'failure']
+
+const batch = (size, inputs) => inputs.reduce((batches, input) => {
   const current = batches[batches.length - 1]
 
   current.push(input)
@@ -287,7 +289,84 @@ const batchIt = (size, inputs) => inputs.reduce((batches, input) => {
   return batches
 }, [[]])
 
-const ANNOTATION_LEVELS = ['notice', 'warning', 'failure']
+const createCheck = async function (octokit, owner, repo, title, ref) {
+  try {
+    const { data: { id: checkRunId } } = await octokit.checks.create({
+      owner,
+      repo,
+      name: title,
+      head_sha: ref,
+      status: 'in_progress',
+    })
+    return checkRunId
+  } catch (err) {
+    core.error(`Unable to create a check: ${err}`)
+    throw err
+  }
+}
+
+const updateCheck = async function (octokit, owner, repo, checkRunId, conclusion, title, summary, annotations) {
+  try {
+    await octokit.checks.update({
+      owner,
+      repo,
+      check_run_id: checkRunId,
+      status: 'completed',
+      conclusion,
+      output: {
+        title,
+        summary,
+        annotations
+      }
+    })
+  } catch (err) {
+    core.error(`Unable to update check {owner: "${owner}", repo: "${repo}", check_run_id: ${checkRunId}}: ${err}`)
+    throw err
+  }
+}
+
+const stats = function (annotations) {
+  const annotationsPerLevel = annotations.reduce((acc, annotation) => {
+    const level = annotation.annotation_level
+    let annotations
+    if (level in acc) {
+      annotations = acc[level]
+    } else {
+      annotations = []
+      acc[level] = annotations
+    }
+    annotations.push(annotation)
+    return acc
+  }, {})
+  const failureCount = (annotationsPerLevel['failure'] || []).length || 0
+  const warningCount = (annotationsPerLevel['warning'] || []).length || 0
+  const noticeCount = (annotationsPerLevel['notice'] || []).length || 0
+  return { failureCount, warningCount, noticeCount }
+}
+
+const summary = function (failureCount, warningCount, noticeCount) {
+  const messages = []
+  if (failureCount > 0) {
+    messages.push(`${failureCount} failure(s) found`)
+  }
+  if (warningCount > 0) {
+    messages.push(`${warningCount} warning(s) found`)
+  }
+  if (noticeCount > 0) {
+    messages.push(`${noticeCount} notice(s) found`)
+  }
+  return messages.join('\n')
+}
+
+const conclusion = function (failureCount, warningCount, noticeCount) {
+  let conclusion = 'success'
+  if (failureCount > 0) {
+    conclusion = 'failure'
+  } else if (warningCount > 0 || noticeCount > 0) {
+    conclusion = 'neutral'
+  }
+  return conclusion
+}
 
 async function run () {
   try {
@@ -302,49 +381,13 @@ async function run () {
 
     const inputContent = await fs.readFile(inputPath, 'utf8')
     const annotations = JSON.parse(inputContent)
-
-    const { data: { id: checkRunId } } = await octokit.checks.create({
-      owner,
-      repo,
-      name: title,
-      head_sha: ref,
-      status: 'in_progress',
-    })
-
-    const annotationsPerLevel = annotations.reduce((acc, annotation) => {
-      const level = annotation.annotation_level
-      let annotations
-      if (level in acc) {
-        annotations = acc[level]
-      } else {
-        annotations = []
-        acc[level] = annotations
-      }
-      annotations.push(annotation)
-      return acc
-    }, {})
-    const failureCount = (annotationsPerLevel['failure'] || []).length || 0
-    const warningCount = (annotationsPerLevel['warning'] || []).length || 0
-    const noticeCount = (annotationsPerLevel['notice'] || []).length || 0
-    const messages = []
-    if (failureCount > 0) {
-      messages.push(`${failureCount} failure(s) found`)
-    }
-    if (warningCount > 0) {
-      messages.push(`${warningCount} warning(s) found`)
-    }
-    if (noticeCount > 0) {
-      messages.push(`${noticeCount} notice(s) found`)
-    }
-    let conclusion = 'success'
-    if (failureCount > 0) {
-      conclusion = 'failure'
-    } else if (warningCount > 0 || noticeCount > 0) {
-      conclusion = 'neutral'
-    }
+    const checkRunId = await createCheck(octokit, owner, repo, title, ref)
+    const { failureCount, warningCount, noticeCount } = stats(annotations)
+    const summary = summary(failureCount, warningCount, noticeCount)
+    const conclusion = conclusion(failureCount, warningCount, noticeCount)
 
     // The GitHub API requires that annotations are submitted in batches of 50 elements maximum
-    const batchedAnnotations = batchIt(50, annotations)
+    const batchedAnnotations = batch(50, annotations)
     for (const batch of batchedAnnotations) {
       const annotations = batch.map(annotation => {
         let annotationLevel
@@ -362,22 +405,10 @@ async function run () {
           title: annotation.title
         }
       })
-      await octokit.checks.update({
-        owner,
-        repo,
-        check_run_id: checkRunId,
-        status: 'completed',
-        conclusion,
-        output: {
-          title,
-          summary: messages.join('\n'),
-          annotations
-        }
-      })
+      await updateCheck(octokit, owner, repo, checkRunId, conclusion, title, summary, annotations)
     }
   } catch (error) {
-    core.error(error)
-    core.setFailed(error.message)
+    core.setFailed(error)
   }
 }
 
