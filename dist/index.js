@@ -314,7 +314,7 @@ const createCheck = async function (octokit, owner, repo, title, ref) {
     })
     return checkRunId
   } catch (err) {
-    if (err === 'HttpError: Not Found') {
+    if (err.message === 'Not Found') {
       throw new GitHubApiUnauthorizedError(`Unable to create a check, please make sure that the provided 'repo-token' has write permissions to ${owner}/${repo} - cause: ${err}`)
     }
     throw new GitHubApiError(`Unable to create a check to ${owner}/${repo} - cause: ${err}`)
@@ -393,15 +393,11 @@ async function run () {
 
     const octokit = new github.getOctokit(repoToken)
     const ref = github.context.sha
-    const owner = github.context.payload.repository.owner.name
-    const repo = github.context.payload.repository.name
+    const owner = github.context.repo.owner
+    const repo = github.context.repo.repo
 
     const inputContent = await fs.readFile(inputPath, 'utf8')
     const annotations = JSON.parse(inputContent)
-    core.info(`owner ${owner}`)
-    core.info(`repo ${repo}`)
-    core.info(`github.context.payload.repository.owner ${github.context.payload.repository.owner}`)
-    core.info(`github.context.payload.repository ${github.context.payload.repository}`)
     const checkRunId = await createCheck(octokit, owner, repo, title, ref)
     const { failureCount, warningCount, noticeCount } = stats(annotations)
     const summary = generateSummary(failureCount, warningCount, noticeCount)
