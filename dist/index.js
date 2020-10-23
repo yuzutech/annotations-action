@@ -385,9 +385,26 @@ const generateConclusion = function (failureCount, warningCount, noticeCount) {
   return conclusion
 }
 
+const booleanValue = function (input) {
+  return /^\s*(true|1)\s*$/i.test(input)
+}
+
+const readAnnotationsFile= async function(inputPath) {
+  const ignoreMissingFileValue = core.getInput('ignore-missing-file', { required: false }) || 'true'
+  const ignoreMissingFile = booleanValue(ignoreMissingFileValue)
+  try {
+    const inputContent = await fs.readFile(inputPath, 'utf8')
+    return JSON.parse(inputContent)
+  } catch (err) {
+    if (err.code === 'ENOENT' && ignoreMissingFile) {
+      core.info(`Ignoring missing file at '${inputPath}' because \'ignore-missing-file\' is true`)
+    } else {
+      throw err
+    }
+  }
+}
+
 async function run () {
-  const ignoreUnauthorizedErrorValue = core.getInput('ignore-unauthorized-error', { required: false }) || 'false'
-  const ignoreUnauthorizedError = /^\s*(true|1)\s*$/i.test(ignoreUnauthorizedErrorValue)
   try {
     const repoToken = core.getInput('repo-token', { required: true })
     const inputPath = core.getInput('input', { required: true })
@@ -398,8 +415,7 @@ async function run () {
     const owner = github.context.repo.owner
     const repo = github.context.repo.repo
 
-    const inputContent = await fs.readFile(inputPath, 'utf8')
-    const annotations = JSON.parse(inputContent)
+    const annotations = await readAnnotationsFile(inputPath)
     const checkRunId = await createCheck(octokit, owner, repo, title, ref)
     const { failureCount, warningCount, noticeCount } = stats(annotations)
     core.info(`Found ${failureCount} failure(s), ${warningCount} warning(s) and ${noticeCount} notice(s)`)
@@ -428,6 +444,8 @@ async function run () {
       await updateCheck(octokit, owner, repo, checkRunId, conclusion, title, summary, annotations)
     }
   } catch (error) {
+    const ignoreUnauthorizedErrorValue = core.getInput('ignore-unauthorized-error', { required: false }) || 'false'
+    const ignoreUnauthorizedError = booleanValue(ignoreUnauthorizedErrorValue)
     if (error.name === 'GitHubApiUnauthorizedError' && ignoreUnauthorizedError) {
       core.info(`Ignoring the following unauthorized error because 'ignore-unauthorized-error' is true: ${error}`)
       return

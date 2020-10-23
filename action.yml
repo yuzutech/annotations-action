@@ -19,6 +19,10 @@ inputs:
     description: 'Ignore errors when the provided repo-token does not have write permissions'
     required: false
     default: 'false'
+  ignore-missing-file:
+    description: 'Ignore if the file which contains annotations is missing'
+    required: false
+    default: 'true'
 runs:
   using: 'node12'
   main: 'dist/index.js'

@@ -36,6 +36,10 @@ In order to use this action, you will need to generate a JSON file using the fol
 
 **Optional** Ignore errors when the provided repo-token does not have write permissions. Default: "false".
 
+### `ignore-missing-file`
+
+**Optional** Ignore if the file which contains annotations is missing. Default: "true".
+
 ## Example usage
 
 ```yml
