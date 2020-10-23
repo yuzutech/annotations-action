@@ -4,6 +4,13 @@ const fs = require('fs').promises
 
 const ANNOTATION_LEVELS = ['notice', 'warning', 'failure']
 
+class GitHubApiUnauthorizedError extends Error {
+  constructor (message) {
+    super(message)
+    this.name = "GitHubApiUnauthorizedError"
+  }
+}
+
 class GitHubApiError extends Error {
   constructor (message) {
     super(message)
@@ -34,7 +41,10 @@ const createCheck = async function (octokit, owner, repo, title, ref) {
     })
     return checkRunId
   } catch (err) {
-    throw new GitHubApiError(`Unable to create a check, please make sure that the provided 'repo-token' has write permissions to ${owner}/${repo} - cause: ${err}`)
+    if (err === 'HttpError: Not Found') {
+      throw new GitHubApiUnauthorizedError(`Unable to create a check, please make sure that the provided 'repo-token' has write permissions to ${owner}/${repo} - cause: ${err}`)
+    }
+    throw new GitHubApiError(`Unable to create a check to ${owner}/${repo} - cause: ${err}`)
   }
 }
 
@@ -101,6 +111,8 @@ const generateConclusion = function (failureCount, warningCount, noticeCount) {
 }
 
 async function run () {
+  const ignoreUnauthorizedErrorValue = core.getInput('ignore-unauthorized-error', { required: false }) || 'false'
+  const ignoreUnauthorizedError = /^\s*(true|1)\s*$/i.test(ignoreUnauthorizedErrorValue)
   try {
     const repoToken = core.getInput('repo-token', { required: true })
     const inputPath = core.getInput('input', { required: true })
@@ -140,6 +152,10 @@ async function run () {
       await updateCheck(octokit, owner, repo, checkRunId, conclusion, title, summary, annotations)
     }
   } catch (error) {
+    if (error.name === 'GitHubApiUnauthorizedError' && ignoreUnauthorizedError) {
+      core.info(`Ignoring the following unauthorized error because 'ignore-unauthorized-error' is true: ${error}`)
+      return
+    }
     core.setFailed(error)
   }
 }

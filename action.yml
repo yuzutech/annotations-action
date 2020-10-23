@@ -15,6 +15,10 @@ inputs:
     description: 'Title of the check'
     required: false
     default: 'check'
+  ignore-unauthorized-error:
+    description: 'Ignore errors when the provided repo-token does not have write permissions'
+    required: false
+    default: 'false'
 runs:
   using: 'node12'
   main: 'dist/index.js'
