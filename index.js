@@ -125,6 +125,7 @@ const readAnnotationsFile= async function(inputPath) {
   } catch (err) {
     if (err.code === 'ENOENT' && ignoreMissingFile) {
       core.info(`Ignoring missing file at '${inputPath}' because \'ignore-missing-file\' is true`)
+      return null
     } else {
       throw err
     }
@@ -143,6 +144,9 @@ async function run () {
     const repo = github.context.repo.repo
 
     const annotations = await readAnnotationsFile(inputPath)
+    if (annotations === null) {
+      return
+    }
     const checkRunId = await createCheck(octokit, owner, repo, title, ref)
     const { failureCount, warningCount, noticeCount } = stats(annotations)
     core.info(`Found ${failureCount} failure(s), ${warningCount} warning(s) and ${noticeCount} notice(s)`)
