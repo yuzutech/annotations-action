@@ -398,6 +398,10 @@ async function run () {
 
     const inputContent = await fs.readFile(inputPath, 'utf8')
     const annotations = JSON.parse(inputContent)
+    core.info(`owner ${owner}`)
+    core.info(`repo ${repo}`)
+    core.info(`github.context.payload.repository.owner ${github.context.payload.repository.owner}`)
+    core.info(`github.context.payload.repository ${github.context.payload.repository}`)
     const checkRunId = await createCheck(octokit, owner, repo, title, ref)
     const { failureCount, warningCount, noticeCount } = stats(annotations)
     const summary = generateSummary(failureCount, warningCount, noticeCount)
