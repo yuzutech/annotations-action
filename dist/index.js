@@ -314,7 +314,7 @@ const createCheck = async function (octokit, owner, repo, title, ref) {
     })
     return checkRunId
   } catch (err) {
-    if (err.message === 'Not Found') {
+    if (err.message === 'Resource not accessible by integration') {
       throw new GitHubApiUnauthorizedError(`Unable to create a check, please make sure that the provided 'repo-token' has write permissions to ${owner}/${repo} - cause: ${err}`)
     }
     throw new GitHubApiError(`Unable to create a check to ${owner}/${repo} - cause: ${err}`)
