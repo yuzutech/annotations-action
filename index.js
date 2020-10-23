@@ -31,6 +31,7 @@ const batch = (size, inputs) => inputs.reduce((batches, input) => {
 }, [[]])
 
 const createCheck = async function (octokit, owner, repo, title, ref) {
+  core.info(`Creating check {owner: "${owner}", repo: "${repo}", name: ${title}}`)
   try {
     const { data: { id: checkRunId } } = await octokit.checks.create({
       owner,
@@ -49,6 +50,7 @@ const createCheck = async function (octokit, owner, repo, title, ref) {
 }
 
 const updateCheck = async function (octokit, owner, repo, checkRunId, conclusion, title, summary, annotations) {
+  core.info(`Updating check {owner: "${owner}", repo: "${repo}", check_run_id: ${checkRunId}}`)
   try {
     await octokit.checks.update({
       owner,
@@ -127,6 +129,7 @@ async function run () {
     const annotations = JSON.parse(inputContent)
     const checkRunId = await createCheck(octokit, owner, repo, title, ref)
     const { failureCount, warningCount, noticeCount } = stats(annotations)
+    core.info(`Found ${failureCount} failure(s), ${warningCount} warning(s) and ${noticeCount} notice(s)`)
     const summary = generateSummary(failureCount, warningCount, noticeCount)
     const conclusion = generateConclusion(failureCount, warningCount, noticeCount)
 
