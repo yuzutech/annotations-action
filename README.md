@@ -32,6 +32,10 @@ In order to use this action, you will need to generate a JSON file using the fol
 
 **Optional** Title of the check. Default: "check".
 
+### `ignore-unauthorized-error`
+
+**Optional** Ignore errors when the provided repo-token does not have write permissions. Default: "false".
+
 ## Example usage
 
 ```yml
