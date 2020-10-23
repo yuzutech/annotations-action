@@ -349,7 +349,7 @@ const stats = function (annotations) {
   return { failureCount, warningCount, noticeCount }
 }
 
-const summary = function (failureCount, warningCount, noticeCount) {
+const generateSummary = function (failureCount, warningCount, noticeCount) {
   const messages = []
   if (failureCount > 0) {
     messages.push(`${failureCount} failure(s) found`)
@@ -363,7 +363,7 @@ const summary = function (failureCount, warningCount, noticeCount) {
   return messages.join('\n')
 }
 
-const conclusion = function (failureCount, warningCount, noticeCount) {
+const generateConclusion = function (failureCount, warningCount, noticeCount) {
   let conclusion = 'success'
   if (failureCount > 0) {
     conclusion = 'failure'
@@ -388,8 +388,8 @@ async function run () {
     const annotations = JSON.parse(inputContent)
     const checkRunId = await createCheck(octokit, owner, repo, title, ref)
     const { failureCount, warningCount, noticeCount } = stats(annotations)
-    const summary = summary(failureCount, warningCount, noticeCount)
-    const conclusion = conclusion(failureCount, warningCount, noticeCount)
+    const summary = generateSummary(failureCount, warningCount, noticeCount)
+    const conclusion = generateConclusion(failureCount, warningCount, noticeCount)
 
     // The GitHub API requires that annotations are submitted in batches of 50 elements maximum
     const batchedAnnotations = batch(50, annotations)
