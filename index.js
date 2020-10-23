@@ -7,14 +7,14 @@ const ANNOTATION_LEVELS = ['notice', 'warning', 'failure']
 class GitHubApiUnauthorizedError extends Error {
   constructor (message) {
     super(message)
-    this.name = "GitHubApiUnauthorizedError"
+    this.name = 'GitHubApiUnauthorizedError'
   }
 }
 
 class GitHubApiError extends Error {
   constructor (message) {
     super(message)
-    this.name = "GitHubApiError"
+    this.name = 'GitHubApiError'
   }
 }
 
@@ -31,7 +31,7 @@ const batch = (size, inputs) => inputs.reduce((batches, input) => {
 }, [[]])
 
 const createCheck = async function (octokit, owner, repo, title, ref) {
-  core.info(`Creating check {owner: "${owner}", repo: "${repo}", name: ${title}}`)
+  core.info(`Creating check {owner: '${owner}', repo: '${repo}', name: ${title}}`)
   try {
     const { data: { id: checkRunId } } = await octokit.checks.create({
       owner,
@@ -43,14 +43,14 @@ const createCheck = async function (octokit, owner, repo, title, ref) {
     return checkRunId
   } catch (err) {
     if (err.message === 'Resource not accessible by integration') {
-      throw new GitHubApiUnauthorizedError(`Unable to create a check, please make sure that the provided 'repo-token' has write permissions to ${owner}/${repo} - cause: ${err}`)
+      throw new GitHubApiUnauthorizedError(`Unable to create a check, please make sure that the provided 'repo-token' has write permissions to '${owner}/${repo}' - cause: ${err}`)
     }
-    throw new GitHubApiError(`Unable to create a check to ${owner}/${repo} - cause: ${err}`)
+    throw new GitHubApiError(`Unable to create a check to '${owner}/${repo}' - cause: ${err}`)
   }
 }
 
 const updateCheck = async function (octokit, owner, repo, checkRunId, conclusion, title, summary, annotations) {
-  core.info(`Updating check {owner: "${owner}", repo: "${repo}", check_run_id: ${checkRunId}}`)
+  core.info(`Updating check {owner: '${owner}', repo: '${repo}', check_run_id: ${checkRunId}}`)
   try {
     await octokit.checks.update({
       owner,
@@ -65,7 +65,7 @@ const updateCheck = async function (octokit, owner, repo, checkRunId, conclusion
       }
     })
   } catch (err) {
-    throw new GitHubApiError(`Unable to update check {owner: "${owner}", repo: "${repo}", check_run_id: ${checkRunId}} - cause: ${err}`)
+    throw new GitHubApiError(`Unable to update check {owner: '${owner}', repo: '${repo}', check_run_id: ${checkRunId}} - cause: ${err}`)
   }
 }
 
