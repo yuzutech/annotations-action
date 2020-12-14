@@ -143,7 +143,12 @@ async function run () {
     const owner = github.context.repo.owner
     const repo = github.context.repo.repo
     console.log({ context: github.context })
-    core.info(`github.context: ${github.context}`)
+    console.log({ context: github.context })
+
+    const payload = github.context.payload
+    console.log({ pull_request: payload.pull_request })
+    console.log({ head_commit: payload.head_commit })
+    console.log({ head_commit: payload.head_commit })
 
     const annotations = await readAnnotationsFile(inputPath)
     if (annotations === null) {
