@@ -139,16 +139,15 @@ async function run () {
     const title = core.getInput('title', { required: false })
 
     const octokit = new github.getOctokit(repoToken)
-    const ref = github.context.sha
+    const pullRequest = github.context.payload.pull_request
+    let ref
+    if (pullRequest) {
+      ref = pullRequest.head.sha
+    } else {
+      ref = github.context.sha
+    }
     const owner = github.context.repo.owner
     const repo = github.context.repo.repo
-    console.log({ context: github.context })
-    console.log({ context: github.context })
-
-    const payload = github.context.payload
-    console.log({ pull_request: payload.pull_request })
-    console.log({ head_commit: payload.head_commit })
-    console.log({ head_commit: payload.head_commit })
 
     const annotations = await readAnnotationsFile(inputPath)
     if (annotations === null) {
