@@ -142,6 +142,8 @@ async function run () {
     const ref = github.context.sha
     const owner = github.context.repo.owner
     const repo = github.context.repo.repo
+    console.log({ context: github.context })
+    core.info(`github.context: ${github.context}`)
 
     const annotations = await readAnnotationsFile(inputPath)
     if (annotations === null) {
