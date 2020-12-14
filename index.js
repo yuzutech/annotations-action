@@ -139,7 +139,13 @@ async function run () {
     const title = core.getInput('title', { required: false })
 
     const octokit = new github.getOctokit(repoToken)
-    const ref = github.context.sha
+    const pullRequest = github.context.payload.pull_request
+    let ref
+    if (pullRequest) {
+      ref = pullRequest.head.sha
+    } else {
+      ref = github.context.sha
+    }
     const owner = github.context.repo.owner
     const repo = github.context.repo.repo
 
