@@ -446,9 +446,8 @@ async function run () {
           path: annotation.file,
           start_line: annotation.line,
           end_line: annotation.line,
+          ...annotation,
           annotation_level: annotationLevel,
-          message: annotation.message,
-          title: annotation.title
         }
       })
       await updateCheck(octokit, owner, repo, checkRunId, conclusion, title, summary, annotations)

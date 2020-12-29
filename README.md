@@ -4,7 +4,7 @@
 
 This action creates annotations from a JSON file.
 
-In order to use this action, you will need to generate a JSON file using the following format:
+In order to use this action, you will need to generate a JSON file using the following format (all options from https://docs.github.com/en/free-pro-team@latest/rest/reference/checks#annotations-items are also supported and it's recommended to use them):
 
 ```js
 [

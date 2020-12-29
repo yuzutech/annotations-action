@@ -19,5 +19,12 @@
     "title": "ArithmeticException",
     "annotation_level": "failure",
     "message": "Exception in thread \"main\" java.lang.ArithmeticException: / by zero\n        at Test.bar(Test.java:9)\n        at Test.foo(Test.java:3)\n        at Main.main(Main.java:3)"
+  },
+  {
+    "path": "index.js",
+    "start_line": 42,
+    "end_line": 43,
+    "annotation_level": "invalid",
+    "message": "Using GitHub's official format allows for some cool stuff (e.g. multiline annotations)."
   }
 ]
