@@ -42,6 +42,8 @@ module.exports =
 /******/ 		// Load entry module and return exports
 /******/ 		return __webpack_require__(104);
 /******/ 	};
+/******/ 	// initialize runtime
+/******/ 	runtime(__webpack_require__);
 /******/
 /******/ 	// run startup
 /******/ 	return startup();
@@ -269,11 +271,19 @@ exports.issueCommand = issueCommand;
 /***/ }),
 
 /***/ 104:
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
-const core = __webpack_require__(470)
-const github = __webpack_require__(469)
-const fs = __webpack_require__(747).promises
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(470);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(469);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(747);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
 
 const ANNOTATION_LEVELS = ['notice', 'warning', 'failure']
 
@@ -304,7 +314,7 @@ const batch = (size, inputs) => inputs.reduce((batches, input) => {
 }, [[]])
 
 const createCheck = async function (octokit, owner, repo, title, ref) {
-  core.info(`Creating check {owner: '${owner}', repo: '${repo}', name: ${title}}`)
+  Object(_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`Creating check {owner: '${owner}', repo: '${repo}', name: ${title}}`)
   try {
     const { data: { id: checkRunId } } = await octokit.checks.create({
       owner,
@@ -323,7 +333,7 @@ const createCheck = async function (octokit, owner, repo, title, ref) {
 }
 
 const updateCheck = async function (octokit, owner, repo, checkRunId, conclusion, title, summary, annotations) {
-  core.info(`Updating check {owner: '${owner}', repo: '${repo}', check_run_id: ${checkRunId}}`)
+  Object(_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`Updating check {owner: '${owner}', repo: '${repo}', check_run_id: ${checkRunId}}`)
   try {
     await octokit.checks.update({
       owner,
@@ -390,14 +400,14 @@ const booleanValue = function (input) {
 }
 
 const readAnnotationsFile= async function(inputPath) {
-  const ignoreMissingFileValue = core.getInput('ignore-missing-file', { required: false }) || 'true'
+  const ignoreMissingFileValue = Object(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('ignore-missing-file', { required: false }) || 'true'
   const ignoreMissingFile = booleanValue(ignoreMissingFileValue)
   try {
-    const inputContent = await fs.readFile(inputPath, 'utf8')
+    const inputContent = await fs__WEBPACK_IMPORTED_MODULE_2__.promises.readFile(inputPath, 'utf8')
     return JSON.parse(inputContent)
   } catch (err) {
     if (err.code === 'ENOENT' && ignoreMissingFile) {
-      core.info(`Ignoring missing file at '${inputPath}' because \'ignore-missing-file\' is true`)
+      Object(_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`Ignoring missing file at '${inputPath}' because \'ignore-missing-file\' is true`)
       return null
     } else {
       throw err
@@ -407,20 +417,20 @@ const readAnnotationsFile= async function(inputPath) {
 
 async function run () {
   try {
-    const repoToken = core.getInput('repo-token', { required: true })
-    const inputPath = core.getInput('input', { required: true })
-    const title = core.getInput('title', { required: false })
+    const repoToken = Object(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('repo-token', { required: true })
+    const inputPath = Object(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('input', { required: true })
+    const title = Object(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('title', { required: false })
 
-    const octokit = new github.getOctokit(repoToken)
-    const pullRequest = github.context.payload.pull_request
+    const octokit = new _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(repoToken)
+    const pullRequest = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request
     let ref
     if (pullRequest) {
       ref = pullRequest.head.sha
     } else {
-      ref = github.context.sha
+      ref = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.sha
     }
-    const owner = github.context.repo.owner
-    const repo = github.context.repo.repo
+    const owner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner
+    const repo = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo
 
     const annotations = await readAnnotationsFile(inputPath)
     if (annotations === null) {
@@ -428,7 +438,7 @@ async function run () {
     }
     const checkRunId = await createCheck(octokit, owner, repo, title, ref)
     const { failureCount, warningCount, noticeCount } = stats(annotations)
-    core.info(`Found ${failureCount} failure(s), ${warningCount} warning(s) and ${noticeCount} notice(s)`)
+    Object(_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`Found ${failureCount} failure(s), ${warningCount} warning(s) and ${noticeCount} notice(s)`)
     const summary = generateSummary(failureCount, warningCount, noticeCount)
     const conclusion = generateConclusion(failureCount, warningCount, noticeCount)
 
@@ -453,13 +463,13 @@ async function run () {
       await updateCheck(octokit, owner, repo, checkRunId, conclusion, title, summary, annotations)
     }
   } catch (error) {
-    const ignoreUnauthorizedErrorValue = core.getInput('ignore-unauthorized-error', { required: false }) || 'false'
+    const ignoreUnauthorizedErrorValue = Object(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('ignore-unauthorized-error', { required: false }) || 'false'
     const ignoreUnauthorizedError = booleanValue(ignoreUnauthorizedErrorValue)
     if (error.name === 'GitHubApiUnauthorizedError' && ignoreUnauthorizedError) {
-      core.info(`Ignoring the following unauthorized error because 'ignore-unauthorized-error' is true: ${error}`)
+      Object(_actions_core__WEBPACK_IMPORTED_MODULE_0__.info)(`Ignoring the following unauthorized error because 'ignore-unauthorized-error' is true: ${error}`)
       return
     }
-    core.setFailed(error)
+    Object(_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(error)
   }
 }
 
@@ -6182,4 +6192,43 @@ exports.checkBypass = checkBypass;
 
 /***/ })
 
-/******/ });
+/******/ },
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ 	"use strict";
+/******/ 
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = function(exports) {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	!function() {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = function(module) {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				function getDefault() { return module['default']; } :
+/******/ 				function getModuleExports() { return module; };
+/******/ 			__webpack_require__.d(getter, 'a', getter);
+/******/ 			return getter;
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getter */
+/******/ 	!function() {
+/******/ 		// define getter function for harmony exports
+/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
+/******/ 		__webpack_require__.d = function(exports, name, getter) {
+/******/ 			if(!hasOwnProperty.call(exports, name)) {
+/******/ 				Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ }
+);
