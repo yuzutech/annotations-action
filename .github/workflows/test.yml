@@ -1,12 +1,19 @@
 name: "test-local"
-on: push
+on: [push, pull_request]
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - run: npm ci
+    - name: Testing / Linting
+      run: npm run test
+    - name: Package
+      run: npm run package
+    - name: "Check that packaging didn't create any changes"
+      run: '[ -z "$(git status --porcelain)" ];'
     - name: Annotate
+      if: github.event_name == 'push'
       uses: ./
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "standard index.js",
+    "lint-fix": "standard --fix index.js",
     "package": "ncc build index.js -o dist",
     "test": "npm run lint"
   },

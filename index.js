@@ -38,7 +38,7 @@ const createCheck = async function (octokit, owner, repo, title, ref) {
       repo,
       name: title,
       head_sha: ref,
-      status: 'in_progress',
+      status: 'in_progress'
     })
     return checkRunId
   } catch (err) {
@@ -82,9 +82,9 @@ const stats = function (annotations) {
     annotations.push(annotation)
     return acc
   }, {})
-  const failureCount = (annotationsPerLevel['failure'] || []).length || 0
-  const warningCount = (annotationsPerLevel['warning'] || []).length || 0
-  const noticeCount = (annotationsPerLevel['notice'] || []).length || 0
+  const failureCount = (annotationsPerLevel.failure || []).length || 0
+  const warningCount = (annotationsPerLevel.warning || []).length || 0
+  const noticeCount = (annotationsPerLevel.notice || []).length || 0
   return { failureCount, warningCount, noticeCount }
 }
 
@@ -116,7 +116,7 @@ const booleanValue = function (input) {
   return /^\s*(true|1)\s*$/i.test(input)
 }
 
-const readAnnotationsFile= async function(inputPath) {
+const readAnnotationsFile = async function (inputPath) {
   const ignoreMissingFileValue = getInput('ignore-missing-file', { required: false }) || 'true'
   const ignoreMissingFile = booleanValue(ignoreMissingFileValue)
   try {
@@ -124,7 +124,7 @@ const readAnnotationsFile= async function(inputPath) {
     return JSON.parse(inputContent)
   } catch (err) {
     if (err.code === 'ENOENT' && ignoreMissingFile) {
-      info(`Ignoring missing file at '${inputPath}' because \'ignore-missing-file\' is true`)
+      info(`Ignoring missing file at '${inputPath}' because 'ignore-missing-file' is true`)
       return null
     } else {
       throw err
@@ -138,7 +138,7 @@ async function run () {
     const inputPath = getInput('input', { required: true })
     const title = getInput('title', { required: false })
 
-    const octokit = new getOctokit(repoToken)
+    const octokit = getOctokit(repoToken)
     const pullRequest = context.payload.pull_request
     let ref
     if (pullRequest) {
@@ -174,7 +174,7 @@ async function run () {
           start_line: annotation.line,
           end_line: annotation.line,
           ...annotation,
-          annotation_level: annotationLevel,
+          annotation_level: annotationLevel
         }
       })
       await updateCheck(octokit, owner, repo, checkRunId, conclusion, title, summary, annotations)
