@@ -139,9 +139,12 @@ async function run () {
     const title = getInput('title', { required: false })
 
     const octokit = getOctokit(repoToken)
+    const commitId = getInput('commit', { required: false }}
     const pullRequest = context.payload.pull_request
     let ref
-    if (pullRequest) {
+    if (commitId) {
+      ref = commitId
+    } else if (pullRequest) {
       ref = pullRequest.head.sha
     } else {
       ref = context.sha
