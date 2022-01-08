@@ -44,7 +44,7 @@ In order to use this action, you will need to generate a JSON file using the fol
 
 ```yml
 - name: Annotate
-  uses: yuzutech/annotations-action@v0.1.0
+  uses: yuzutech/annotations-action@v0.4.0
   with:
     repo-token: "${{ secrets.GITHUB_TOKEN }}"
     title: 'lint'
