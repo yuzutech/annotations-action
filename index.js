@@ -1,5 +1,5 @@
-import { getInput, info, setFailed } from '@actions/core'
-import { context, getOctokit } from '@actions/github'
+import { info, getInput, setFailed } from '@actions/core'
+import { getOctokit, context } from '@actions/github'
 import { promises as fs } from 'fs'
 
 const ANNOTATION_LEVELS = ['notice', 'warning', 'failure']
@@ -33,7 +33,7 @@ const batch = (size, inputs) => inputs.reduce((batches, input) => {
 const createCheck = async function (octokit, owner, repo, title, ref) {
   info(`Creating check {owner: '${owner}', repo: '${repo}', name: ${title}}`)
   try {
-    const { data: { id: checkRunId } } = await octokit.rest.checks.create({
+    const { data: { id: checkRunId } } = await octokit.checks.create({
       owner,
       repo,
       name: title,
@@ -52,7 +52,7 @@ const createCheck = async function (octokit, owner, repo, title, ref) {
 const updateCheck = async function (octokit, owner, repo, checkRunId, conclusion, title, summary, annotations) {
   info(`Updating check {owner: '${owner}', repo: '${repo}', check_run_id: ${checkRunId}}`)
   try {
-    await octokit.rest.checks.update({
+    await octokit.checks.update({
       owner,
       repo,
       check_run_id: checkRunId,
@@ -120,7 +120,7 @@ const readAnnotationsFile = async function (inputPath) {
   const ignoreMissingFileValue = getInput('ignore-missing-file', { required: false }) || 'true'
   const ignoreMissingFile = booleanValue(ignoreMissingFileValue)
   try {
-    const inputContent = await fs.readFile(inputPath, { encoding: 'utf8' })
+    const inputContent = await fs.readFile(inputPath, 'utf8')
     return JSON.parse(inputContent)
   } catch (err) {
     if (err.code === 'ENOENT' && ignoreMissingFile) {

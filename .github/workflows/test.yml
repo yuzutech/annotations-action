@@ -5,12 +5,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-      with:
-        node-version: 16
     - run: npm ci
     - name: Testing / Linting
-      run: npm t
+      run: npm run test
     - name: Package
       run: npm run package
     - name: "Check that packaging didn't create any changes"
