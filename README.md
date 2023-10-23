@@ -18,6 +18,14 @@ In order to use this action, you will need to generate a JSON file using the fol
 ]
 ```
 
+## Permissions
+
+You need to provide the `checks` write permission:
+```yaml
+permissions:
+  checks: write
+```
+
 ## Inputs
 
 ### `repo-token`
