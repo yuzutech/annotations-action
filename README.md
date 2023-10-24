@@ -27,6 +27,7 @@ Error: GitHubApiUnauthorizedError: Unable to create a check, please make sure th
 ```
 
 You need to provide the `checks` write permission:
+
 ```yaml
 permissions:
   checks: write
