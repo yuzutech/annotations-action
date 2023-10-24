@@ -35,8 +35,12 @@ permissions:
   checks: write
 ```
 
-Note that setting a `permissions` field will disable all omitted permissions, like
+You can use `permissions` either as a top-level key, to apply to all jobs in the workflow, or within specific jobs. When you add the permissions key within a specific job, all actions and run commands within that job that use the `GITHUB_TOKEN` gain the access rights you specify.
+
+**IMPORTANT**: Setting a `permissions` field will disable all omitted permissions, like
 the `contents: read`, which is needed to clone and read your repository.
+
+You can learn more about `GITHUB_TOKEN` permissions at: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
 
 ## Inputs
 
