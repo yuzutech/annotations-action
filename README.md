@@ -20,11 +20,23 @@ In order to use this action, you will need to generate a JSON file using the fol
 
 ## Permissions
 
+It is possible you have a `GITHUB_TOKEN` with restricted access by default, in which
+case you might get the following error:
+
+```
+Error: GitHubApiUnauthorizedError: Unable to create a check, please make sure that
+the provided 'repo-token' has write permissions to 'your/repo' - cause:
+HttpError: Resource not accessible by integration
+```
+
 You need to provide the `checks` write permission:
 ```yaml
 permissions:
   checks: write
 ```
+
+Note that setting a `permissions` field will disable all omitted permissions, like
+the `contents: read`, which is needed to clone and read your repository.
 
 ## Inputs
 
