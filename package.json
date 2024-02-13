@@ -30,7 +30,7 @@
     "@actions/github": "5.0.0"
   },
   "devDependencies": {
-    "@vercel/ncc": "0.33.1",
+    "@vercel/ncc": "0.38.1",
     "eslint": "8.5.0",
     "standard": "^16.0.4"
   }
