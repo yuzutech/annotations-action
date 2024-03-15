@@ -23,6 +23,9 @@ inputs:
     description: 'Ignore if the file which contains annotations is missing'
     required: false
     default: 'true'
+  commit:
+    description: 'Commit SHA to which annotations are published.'
+    required: false
 runs:
   using: 'node20'
   main: 'dist/index.js'

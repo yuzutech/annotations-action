@@ -62,6 +62,10 @@ You can learn more about `GITHUB_TOKEN` permissions at: https://docs.github.com/
 
 **Optional** Ignore if the file which contains annotations is missing. Default: "true".
 
+### `commit`
+
+**Optional** Commit SHA to which annotations are published.
+
 ## Example usage
 
 ```yml
