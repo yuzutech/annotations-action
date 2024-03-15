@@ -1,6 +1,6 @@
 {
   "name": "@yuzutech/annotations-action",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "description": "GitHub action that creates annotations from a JSON file",
   "main": "index.js",
   "scripts": {
