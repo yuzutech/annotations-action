@@ -3,11 +3,13 @@
   "version": "0.5.0",
   "description": "GitHub action that creates annotations from a JSON file",
   "main": "index.js",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
-    "lint": "standard index.js",
-    "lint-fix": "standard --fix index.js",
+    "format": "prettier --write index.js",
     "package": "ncc build index.js -o dist",
-    "test": "npm run lint"
+    "test": "prettier --check index.js"
   },
   "repository": {
     "type": "git",
@@ -26,12 +28,14 @@
   },
   "homepage": "https://github.com/yuzutech/annotations-action#readme",
   "dependencies": {
-    "@actions/core": "1.6.0",
-    "@actions/github": "5.0.0"
+    "@actions/core": "~3.0",
+    "@actions/github": "~9.0"
   },
   "devDependencies": {
-    "@vercel/ncc": "0.38.1",
-    "eslint": "8.5.0",
-    "standard": "^16.0.4"
+    "@vercel/ncc": "0.38.4",
+    "prettier": "~3.8"
+  },
+  "volta": {
+    "node": "24.14.1"
   }
 }
